@@ -4,7 +4,7 @@ Project to learn OpenGL in C++.
 
 ## Create a Window
 
-GLFW will use for this.
+GLFW will be used for this as a submodule.
 
 https://www.glfw.org/
 
