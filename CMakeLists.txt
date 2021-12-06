@@ -3,19 +3,20 @@ project(OpenGLStart)
 
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS})
-
-set( GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only" )
-set( GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only" )
-
-add_subdirectory(external/glfw)
+add_executable(OpenGLStart WIN32 main.cpp)
 
 if(MSVC)
     SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:mainCRTStartup")
 endif()
 
-add_executable(OpenGLStart WIN32 main.cpp)
-target_link_libraries(OpenGLStart ${OPENGL_LIBRARIES} glfw)
+# glfw and legacy OpenGL
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})
+add_subdirectory(external/glfw EXCLUDE_FROM_ALL)
+target_link_libraries(OpenGLStart PRIVATE ${OPENGL_LIBRARIES} glfw)
 
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT GLFW-CMake-starter)
+# glew
+add_definitions(-DGLEW_STATIC)
+add_subdirectory(external/glew EXCLUDE_FROM_ALL)
+target_link_libraries(OpenGLStart PRIVATE libglew_static)
+
